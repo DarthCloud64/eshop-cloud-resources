@@ -1,0 +1,69 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    pull_policy: missing
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - eshop-net
+    volumes:
+      - ./data/mnesia:/var/lib/rabbitmq/mnesia
+      - ./data/config:/etc/rabbitmq/rabbitmq
+      - ./data/logs:/var/log/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+  mongodb:
+    image: mongodb/mongodb-community-server
+    pull_policy: missing
+    ports:
+      - 27017:27017
+    networks:
+      - eshop-net
+  eshop-products:
+    image: eshop-products:latest
+    pull_policy: missing
+    ports:
+      - 9090:3000
+    environment:
+      MONGODB_URI: "mongodb://mongodb:27017"
+      MONGODB_DB: "eshop-product"
+      MONGODB_COLLECTION: "products"
+      RABBITMQ_URI: "rabbitmq"
+      RABBITMQ_PORT: "5672"
+      RABBITMQ_USER: "guest"
+      RABBITMQ_PASS: "guest"
+      AXUM_PORT: "3000"
+    networks:
+      - eshop-net
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+  eshop-orders:
+    image: eshop-orders:latest
+    pull_policy: missing
+    ports:
+      - 9091:3000
+    environment:
+      MONGODB_URI: "mongodb://mongodb:27017"
+      MONGODB_DB: "eshop-order"
+      MONGODB_ORDER_COLLECTION: "orders"
+      MONGODB_CARTS_COLLECTION: "carts"
+      RABBITMQ_URI: "rabbitmq"
+      RABBITMQ_PORT: "5672"
+      RABBITMQ_USER: "guest"
+      RABBITMQ_PASS: "guest"
+      AXUM_PORT: "3000"
+    networks:
+      - eshop-net
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+
+networks:
+  eshop-net:
