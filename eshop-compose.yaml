@@ -63,7 +63,13 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
-
+  eshop-ui:
+    image: eshop-ui:latest
+    pull_policy: missing
+    ports:
+      - 5173:80
+    networks:
+      - eshop-net
 
 networks:
   eshop-net:
