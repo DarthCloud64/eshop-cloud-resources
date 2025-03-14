@@ -8,6 +8,7 @@ metadata:
     io.kompose.service: eshop-ui
   name: eshop-ui
 spec:
+  type: LoadBalancer
   ports:
     - name: "5173"
       port: 5173
