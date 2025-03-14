@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: /home/rob/apps/kompose convert -f eshop-compose.yaml
+    kompose.version: 1.35.0 (9532ceef3)
+  labels:
+    io.kompose.service: eshop-orders
+  name: eshop-orders
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: eshop-orders
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: /home/rob/apps/kompose convert -f eshop-compose.yaml
+        kompose.version: 1.35.0 (9532ceef3)
+      labels:
+        io.kompose.service: eshop-orders
+    spec:
+      containers:
+        - env:
+            - name: AXUM_PORT
+              value: "3000"
+            - name: MONGODB_CARTS_COLLECTION
+              value: carts
+            - name: MONGODB_DB
+              value: eshop-order
+            - name: MONGODB_ORDER_COLLECTION
+              value: orders
+            - name: MONGODB_URI
+              value: mongodb://4.151.29.3:27017
+            - name: RABBITMQ_PASS
+              value: guest
+            - name: RABBITMQ_PORT
+              value: "5672"
+            - name: RABBITMQ_URI
+              value: 172.202.165.31
+            - name: RABBITMQ_USER
+              value: guest
+          image: eshopContainerRegistryXYZ.azurecr.io/eshop-aks/order-service:latest
+          name: order-service
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+      restartPolicy: Always
