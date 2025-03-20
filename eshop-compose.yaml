@@ -68,9 +68,6 @@ services:
     pull_policy: missing
     ports:
       - 5173:80
-    environment:
-      VITE_PRODUCT_SERVICE: http://localhost:9090
-      VITE_ORDER_SERVICE: http://localhost:9091
     networks:
       - eshop-net
 
