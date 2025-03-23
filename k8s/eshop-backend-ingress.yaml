@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: eshop-backend-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: '/$1' # Nginx ingress controller should retain the data after the prefix (i.e. robert-reyes-dev.xyz/product-service/products will route to product-service/products in the cluster)
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: robert-reyes-dev.xyz
+      http:
+        paths:
+          - path: /product-service/(.*)
+            pathType: ImplementationSpecific # Needed for regex
+            backend:
+              service:
+                name: eshop-products
+                port:
+                  number: 9090
+          - path: /order-service/(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: eshop-orders
+                port:
+                  number: 9091

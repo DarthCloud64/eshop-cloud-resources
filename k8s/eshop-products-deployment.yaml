@@ -29,7 +29,7 @@ spec:
             - name: MONGODB_DB
               value: eshop-product
             - name: MONGODB_URI
-              value: mongodb://4.151.29.3:27017
+              value: mongodb://10.0.60.172:27017
             - name: RABBITMQ_PASS
               value: guest
             - name: RABBITMQ_PORT
@@ -38,7 +38,7 @@ spec:
               value: 172.202.165.31
             - name: RABBITMQ_USER
               value: guest
-          image: eshopContainerRegistryXYZ.azurecr.io/eshop-aks/product-service:latest
+          image: eshopContainerRegistryXYZ.azurecr.io/eshop-aks/product-service:20250323182021
           name: product-service
           resources:
             requests:

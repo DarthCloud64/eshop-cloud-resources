@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: eshop-frontend-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: / # Nginx ingress controller should rewrite the target path to the root
+    nginx.ingress.kubernetes.io/error-page: 404 = /index.html # Fallback to index.html on 404 http errors. This allows React routing to function via the ingress controller
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: robert-reyes-dev.xyz
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: eshop-ui
+                port:
+                  number: 80

@@ -8,7 +8,7 @@ metadata:
     io.kompose.service: eshop-orders
   name: eshop-orders
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - name: "9091"
       port: 9091

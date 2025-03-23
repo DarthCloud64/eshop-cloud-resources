@@ -3,3 +3,4 @@ data/
 terraform.tfvars
 terraform.tfstate
 *.tfstate.backup
+cred.json

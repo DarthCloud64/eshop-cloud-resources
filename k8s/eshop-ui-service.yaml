@@ -8,10 +8,10 @@ metadata:
     io.kompose.service: eshop-ui
   name: eshop-ui
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
-    - name: "5173"
-      port: 5173
+    - name: "80"
+      port: 80
       targetPort: 80
   selector:
     io.kompose.service: eshop-ui
