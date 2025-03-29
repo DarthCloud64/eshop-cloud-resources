@@ -1,5 +1,6 @@
 services:
   rabbitmq:
+    container_name: eshop-rabbit-server
     image: rabbitmq:3-management
     pull_policy: missing
     ports:
@@ -18,13 +19,39 @@ services:
       retries: 3
       start_period: 5s
   mongodb:
+    container_name: eshop-mongodb-server
     image: mongodb/mongodb-community-server
     pull_policy: missing
     ports:
       - 27017:27017
     networks:
       - eshop-net
+  prometheus:
+    container_name: eshop-prometheus-server
+    hostname: prometheus
+    image: prom/prometheus
+    pull_policy: missing
+    ports:
+      - 9092:9090
+    command: --config.file=/etc/prometheus/prometheus.yaml
+    volumes:
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yaml
+    networks:
+      - eshop-net
+  grafana:
+    container_name: eshop-grafana-server
+    image: grafana/grafana
+    pull_policy: missing
+    ports:
+      - 3000:3000
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    networks:
+      - eshop-net
   eshop-products:
+    container_name: eshop-product-service
+    hostname: product-service
     image: eshop-products:latest
     pull_policy: missing
     ports:
@@ -38,13 +65,17 @@ services:
       RABBITMQ_USER: "guest"
       RABBITMQ_PASS: "guest"
       AXUM_PORT: "3000"
+      AUTH0_DOMAIN: "https://dev-3y955wo3.us.auth0.com"
+      AUTH0_AUDIENCE: "http://localhost:9090"
     networks:
       - eshop-net
     depends_on:
       rabbitmq:
         condition: service_healthy
   eshop-orders:
+    container_name: eshop-order-service
     image: eshop-orders:latest
+    hostname: order-service
     pull_policy: missing
     ports:
       - 9091:3000
@@ -58,12 +89,15 @@ services:
       RABBITMQ_USER: "guest"
       RABBITMQ_PASS: "guest"
       AXUM_PORT: "3000"
+      AUTH0_DOMAIN: "https://dev-3y955wo3.us.auth0.com"
+      AUTH0_AUDIENCE: "http://localhost:9090"
     networks:
       - eshop-net
     depends_on:
       rabbitmq:
         condition: service_healthy
   eshop-ui:
+    container_name: eshop-ui
     image: eshop-ui:latest
     pull_policy: missing
     ports:
