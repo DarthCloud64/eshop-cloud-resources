@@ -38,7 +38,11 @@ spec:
               value: 172.202.165.31
             - name: RABBITMQ_USER
               value: guest
-          image: eshopContainerRegistryXYZ.azurecr.io/eshop-aks/product-service:20250323182021
+            - name: AUTH0_DOMAIN
+              value: __AUTH0_DOMAIN__
+            - name: AUTH0_AUDIENCE
+              value: __AUTH0_AUDIENCE__
+          image: eshopContainerRegistryXYZ.azurecr.io/eshop-aks/product-service:20250326010816
           name: product-service
           resources:
             requests:

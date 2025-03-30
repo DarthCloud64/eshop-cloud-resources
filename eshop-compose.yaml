@@ -49,6 +49,47 @@ services:
       GF_SECURITY_ADMIN_PASSWORD: admin
     networks:
       - eshop-net
+  splunk:
+    hostname: splunk
+    container_name: eshop-splunk
+    image: splunk/splunk
+    pull_policy: missing
+    ports: 
+      - 8000:8000 #dashboard
+      - 8088:8088 #HTTP event collector
+      - 9997:9997 #TCP input
+    environment:
+      SPLUNK_START_ARGS: --accept-license
+      SPLUNK_PASSWORD: Password123!
+      SPLUNK_STANDALONE_URL: splunk
+    volumes:
+      - splunk_data:/opt/splunk/etc
+      - splunk_db:/opt/splunk/var
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/splunk/bin/splunk status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - eshop-net
+  splunk-forwarder:
+    hostname: splunk-forwarder
+    image: splunk/universalforwarder:9.3.2
+    environment:
+      SPLUNK_START_ARGS: --accept-license
+      SPLUNK_STANDALONE_URL: splunk
+      SPLUNK_PASSWORD: Password123!
+      SPLUNK_FORWARD_SERVER: splunk:9997
+      SPLUNK_ADD: "monitor /opt/splunkforwarder/var/log/axum-logs -sourcetype axum-app"
+      SPLUNK_USER: root
+      SPLUNK_GROUP: root
+    volumes:
+      - ./logs:/opt/splunkforwarder/var/log/axum-logs # Mount the log directory
+    depends_on:
+      - splunk
+    networks:
+      - eshop-net
+  
   eshop-products:
     container_name: eshop-product-service
     hostname: product-service
@@ -65,12 +106,16 @@ services:
       RABBITMQ_USER: "guest"
       RABBITMQ_PASS: "guest"
       AXUM_PORT: "3000"
-      AUTH0_DOMAIN: "https://dev-3y955wo3.us.auth0.com"
-      AUTH0_AUDIENCE: "http://localhost:9090"
+      AUTH0_DOMAIN: __AUTH0_DOMAIN__
+      AUTH0_AUDIENCE: __AUTH0_AUDIENCE__
+    volumes:
+      - ./logs:/app/logs
     networks:
       - eshop-net
     depends_on:
       rabbitmq:
+        condition: service_healthy
+      splunk-forwarder:
         condition: service_healthy
   eshop-orders:
     container_name: eshop-order-service
@@ -89,8 +134,8 @@ services:
       RABBITMQ_USER: "guest"
       RABBITMQ_PASS: "guest"
       AXUM_PORT: "3000"
-      AUTH0_DOMAIN: "https://dev-3y955wo3.us.auth0.com"
-      AUTH0_AUDIENCE: "http://localhost:9090"
+      AUTH0_DOMAIN: __AUTH0_DOMAIN__
+      AUTH0_AUDIENCE: __AUTH0_AUDIENCE__
     networks:
       - eshop-net
     depends_on:
@@ -107,3 +152,7 @@ services:
 
 networks:
   eshop-net:
+
+volumes:
+  splunk_data:
+  splunk_db:
