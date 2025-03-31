@@ -74,6 +74,7 @@ services:
       - eshop-net
   splunk-forwarder:
     hostname: splunk-forwarder
+    container_name: eshop-splunk-forwarder
     image: splunk/universalforwarder:9.3.2
     environment:
       SPLUNK_START_ARGS: --accept-license
