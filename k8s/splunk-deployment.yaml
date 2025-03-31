@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: ../kompose-linux-amd64 --file /home/rob/Code/Rust/eshop-cloud-resources/eshop-compose.yaml convert
+    kompose.version: 1.35.0 (9532ceef3)
+  labels:
+    io.kompose.service: splunk
+  name: splunk
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: splunk
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: ../kompose-linux-amd64 --file /home/rob/Code/Rust/eshop-cloud-resources/eshop-compose.yaml convert
+        kompose.version: 1.35.0 (9532ceef3)
+      labels:
+        io.kompose.service: splunk
+    spec:
+      containers:
+        - env:
+            - name: SPLUNK_PASSWORD
+              value: Password123!
+            - name: SPLUNK_STANDALONE_URL
+              value: splunk
+            - name: SPLUNK_START_ARGS
+              value: --accept-license
+          image: splunk/splunk
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          livenessProbe:
+            exec:
+              command:
+                - /opt/splunk/bin/splunk status
+            failureThreshold: 3
+            periodSeconds: 30
+            timeoutSeconds: 10
+          name: eshop-splunk
+          ports:
+            - containerPort: 8000
+              protocol: TCP
+            - containerPort: 8088
+              protocol: TCP
+            - containerPort: 9997
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /opt/splunk/etc
+              name: splunk-data
+            - mountPath: /opt/splunk/var
+              name: splunk-db
+      restartPolicy: Always
+      volumes:
+        - name: splunk-data
+          persistentVolumeClaim:
+            claimName: splunk-data
+        - name: splunk-db
+          persistentVolumeClaim:
+            claimName: splunk-db

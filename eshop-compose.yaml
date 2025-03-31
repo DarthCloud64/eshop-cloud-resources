@@ -106,6 +106,7 @@ services:
       RABBITMQ_USER: "guest"
       RABBITMQ_PASS: "guest"
       AXUM_PORT: "3000"
+      LOG_PATH: "/app/logs/eshop-product-service.log"
       AUTH0_DOMAIN: __AUTH0_DOMAIN__
       AUTH0_AUDIENCE: __AUTH0_AUDIENCE__
     volumes:
@@ -134,8 +135,11 @@ services:
       RABBITMQ_USER: "guest"
       RABBITMQ_PASS: "guest"
       AXUM_PORT: "3000"
+      LOG_PATH: "/app/logs/eshop-order-service.log"
       AUTH0_DOMAIN: __AUTH0_DOMAIN__
       AUTH0_AUDIENCE: __AUTH0_AUDIENCE__
+    volumes:
+      - ./logs:/app/logs
     networks:
       - eshop-net
     depends_on:
