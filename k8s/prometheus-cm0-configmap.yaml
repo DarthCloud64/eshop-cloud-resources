@@ -8,7 +8,7 @@ data:
     - job_name: eshop-monitoring
       honor_labels: true
       static_configs:
-      - targets: ['https://robert-reyes-dev.xyz/product-service', 'https://robert-reyes-dev.xyz/order-service']
+      - targets: ['10.0.223.56:9090', '10.0.168.5:9091']
 kind: ConfigMap
 metadata:
   annotations:

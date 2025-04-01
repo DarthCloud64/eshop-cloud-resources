@@ -42,7 +42,9 @@ spec:
               value: __AUTH0_DOMAIN__
             - name: AUTH0_AUDIENCE
               value: __AUTH0_AUDIENCE__
-          image: eshopContainerRegistryXYZ.azurecr.io/eshop-aks/product-service:20250326010816
+            - name: LOG_PATH
+              value: /app/logs/eshop-product-service.log
+          image: eshopContainerRegistryXYZ.azurecr.io/eshop-aks/product-service:20250331031734
           name: product-service
           resources:
             requests:
@@ -54,4 +56,11 @@ spec:
           ports:
             - containerPort: 3000
               protocol: TCP
+          volumeMounts:
+            - mountPath: /app/logs
+              name: axum-logs
       restartPolicy: Always
+      volumes:
+        - name: axum-logs
+          persistentVolumeClaim:
+            claimName: eshop-axum-pvc
