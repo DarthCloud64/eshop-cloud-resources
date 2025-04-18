@@ -24,3 +24,23 @@ spec:
                 name: eshop-orders
                 port:
                   number: 9091
+    - host: splunk.robert-reyes-dev.xyz
+      http:
+        paths:
+          - path: /(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: eshop-splunk
+                port:
+                  number: 8000
+    - host: rabbit.robert-reyes-dev.xyz
+      http:
+        paths:
+          - path: /(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: eshop-rabbitmq
+                port:
+                  number: 15672

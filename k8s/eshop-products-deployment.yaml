@@ -29,13 +29,13 @@ spec:
             - name: MONGODB_DB
               value: eshop-product
             - name: MONGODB_URI
-              value: mongodb://10.0.60.172:27017
+              value: mongodb://eshop-mongodb:27017
             - name: RABBITMQ_PASS
               value: guest
             - name: RABBITMQ_PORT
               value: "5672"
             - name: RABBITMQ_URI
-              value: 172.202.165.31
+              value: eshop-rabbitmq
             - name: RABBITMQ_USER
               value: guest
             - name: AUTH0_DOMAIN
@@ -44,7 +44,7 @@ spec:
               value: __AUTH0_AUDIENCE__
             - name: LOG_PATH
               value: /app/logs/eshop-product-service.log
-          image: eshopContainerRegistryXYZ.azurecr.io/eshop-aks/product-service:20250331031734
+          image: eshopContainerRegistryXYZ.azurecr.io/eshop-aks/product-service:20250412195811
           name: product-service
           resources:
             requests:

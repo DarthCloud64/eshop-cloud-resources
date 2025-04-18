@@ -27,13 +27,13 @@ spec:
             - name: SPLUNK_ADD
               value: monitor /opt/splunkforwarder/var/log/axum-logs -sourcetype axum-app
             - name: SPLUNK_FORWARD_SERVER
-              value: splunk:9997
+              value: eshop-splunk:9997
             - name: SPLUNK_GROUP
               value: root
             - name: SPLUNK_PASSWORD
               value: Password123!
             - name: SPLUNK_STANDALONE_URL
-              value: splunk
+              value: eshop-splunk
             - name: SPLUNK_START_ARGS
               value: --accept-license
             - name: SPLUNK_USER

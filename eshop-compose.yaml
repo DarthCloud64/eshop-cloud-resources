@@ -108,8 +108,8 @@ services:
       RABBITMQ_PASS: "guest"
       AXUM_PORT: "3000"
       LOG_PATH: "/app/logs/eshop-product-service.log"
-      AUTH0_DOMAIN: __AUTH0_DOMAIN__
-      AUTH0_AUDIENCE: __AUTH0_AUDIENCE__
+      AUTH0_DOMAIN: "https://dev-3y955wo3.us.auth0.com"
+      AUTH0_AUDIENCE: "http://localhost:9090"
     volumes:
       - ./logs:/app/logs
     networks:
@@ -137,8 +137,34 @@ services:
       RABBITMQ_PASS: "guest"
       AXUM_PORT: "3000"
       LOG_PATH: "/app/logs/eshop-order-service.log"
+      AUTH0_DOMAIN: "https://dev-3y955wo3.us.auth0.com"
+      AUTH0_AUDIENCE: "http://localhost:9090"
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - eshop-net
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+  eshop-payments:
+    container_name: eshop-payment-service
+    image: eshop-payments:latest
+    hostname: payment-service
+    pull_policy: missing
+    ports:
+      - 9093:3000
+    environment:
+      RABBITMQ_URI: "rabbitmq"
+      RABBITMQ_PORT: "5672"
+      RABBITMQ_USER: "guest"
+      RABBITMQ_PASS: "guest"
+      AXUM_PORT: "3000"
+      LOG_PATH: "/app/logs/eshop-payment-service.log"
       AUTH0_DOMAIN: __AUTH0_DOMAIN__
       AUTH0_AUDIENCE: __AUTH0_AUDIENCE__
+      PAYMENT_REDIRECT_BASE_URL: "http://localhost:5173"
+      STRIPE_API_BASE_URL: __STRIPE_API_BASE_URL__
+      STRIPE_API_KEY: __STRIPE_API_KEY__
     volumes:
       - ./logs:/app/logs
     networks:
