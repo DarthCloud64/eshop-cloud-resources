@@ -44,7 +44,7 @@ spec:
               value: __AUTH0_AUDIENCE__
             - name: LOG_PATH
               value: /app/logs/eshop-product-service.log
-          image: eshopContainerRegistryXYZ.azurecr.io/eshop-aks/product-service:20250412195811
+          image: eshopContainerRegistryXYZ.azurecr.io/eshop-aks/product-service:20250606195840
           name: product-service
           resources:
             requests:

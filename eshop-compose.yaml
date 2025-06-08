@@ -18,10 +18,15 @@ services:
       timeout: 5s
       retries: 3
       start_period: 5s
-  mongodb:
-    container_name: eshop-mongodb-server
+  mongodb-1:
+    container_name: eshop-mongodb-server-1
+    hostname: eshop-mongodb-server-1
     image: mongodb/mongodb-community-server
     pull_policy: missing
+    command: ["--replSet", "rs0", "--bind_ip", "0.0.0.0", "--port", "27017"]
+    volumes:
+      - data1:/data/db
+      - config1:/data/configdb
     ports:
       - 27017:27017
     networks:
@@ -54,7 +59,7 @@ services:
     container_name: eshop-splunk
     image: splunk/splunk
     pull_policy: missing
-    ports: 
+    ports:
       - 8000:8000 #dashboard
       - 8088:8088 #HTTP event collector
       - 9997:9997 #TCP input
@@ -90,7 +95,7 @@ services:
       - splunk
     networks:
       - eshop-net
-  
+
   eshop-products:
     container_name: eshop-product-service
     hostname: product-service
@@ -99,7 +104,7 @@ services:
     ports:
       - 9090:3000
     environment:
-      MONGODB_URI: "mongodb://mongodb:27017"
+      MONGODB_URI: "mongodb://eshop-mongodb-server-1:27017/?directConnection=true&replicaSet=rs0"
       MONGODB_DB: "eshop-product"
       MONGODB_COLLECTION: "products"
       RABBITMQ_URI: "rabbitmq"
@@ -127,7 +132,7 @@ services:
     ports:
       - 9091:3000
     environment:
-      MONGODB_URI: "mongodb://mongodb:27017"
+      MONGODB_URI: "mongodb://eshop-mongodb-server-1:27017/?directConnection=true&replicaSet=rs0"
       MONGODB_DB: "eshop-order"
       MONGODB_ORDER_COLLECTION: "orders"
       MONGODB_CARTS_COLLECTION: "carts"
@@ -187,3 +192,5 @@ networks:
 volumes:
   splunk_data:
   splunk_db:
+  data1:
+  config1:

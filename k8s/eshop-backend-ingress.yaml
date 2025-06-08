@@ -24,6 +24,13 @@ spec:
                 name: eshop-orders
                 port:
                   number: 9091
+          - path: /payment-service/(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: eshop-payments
+                port:
+                  number: 9093
     - host: splunk.robert-reyes-dev.xyz
       http:
         paths:

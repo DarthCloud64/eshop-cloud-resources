@@ -21,7 +21,7 @@ spec:
         io.kompose.service: eshop-ui
     spec:
       containers:
-        - image: eshopContainerRegistryXYZ.azurecr.io/eshop-aks/ui:20250412195644
+        - image: eshopContainerRegistryXYZ.azurecr.io/eshop-aks/ui:20250608041201
           name: ui
           ports:
             - containerPort: 80

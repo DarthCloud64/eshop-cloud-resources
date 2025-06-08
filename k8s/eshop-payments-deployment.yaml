@@ -5,31 +5,29 @@ metadata:
     kompose.cmd: /home/rob/apps/kompose convert -f eshop-compose.yaml
     kompose.version: 1.35.0 (9532ceef3)
   labels:
-    io.kompose.service: eshop-orders
-  name: eshop-orders
+    io.kompose.service: eshop-payments
+  name: eshop-payments
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: eshop-orders
+      io.kompose.service: eshop-payments
   template:
     metadata:
       annotations:
         kompose.cmd: /home/rob/apps/kompose convert -f eshop-compose.yaml
         kompose.version: 1.35.0 (9532ceef3)
       labels:
-        io.kompose.service: eshop-orders
+        io.kompose.service: eshop-payments
     spec:
       containers:
         - env:
             - name: AXUM_PORT
               value: "3000"
-            - name: MONGODB_CARTS_COLLECTION
-              value: carts
+            - name: MONGODB_COLLECTION
+              value: payments
             - name: MONGODB_DB
-              value: eshop-order
-            - name: MONGODB_ORDER_COLLECTION
-              value: orders
+              value: eshop-payment
             - name: MONGODB_URI
               value: mongodb://eshop-mongodb:27017
             - name: RABBITMQ_PASS
@@ -41,13 +39,19 @@ spec:
             - name: RABBITMQ_USER
               value: guest
             - name: AUTH0_DOMAIN
-              value: __AUTH0_DOMAIN__
+              value: https://dev-3y955wo3.us.auth0.com
             - name: AUTH0_AUDIENCE
-              value: __AUTH0_AUDIENCE__
+              value: http://localhost:9090
             - name: LOG_PATH
-              value: /app/logs/eshop-order-service.log
-          image: eshopContainerRegistryXYZ.azurecr.io/eshop-aks/order-service:20250608040526
-          name: order-service
+              value: /app/logs/eshop-payment-service.log
+            - name: PAYMENT_REDIRECT_BASE_URL
+              value: https://robert-reyes-dev.xyz
+            - name: STRIPE_API_BASE_URL
+              value: __STRIPE_API_BASE_URL__
+            - name: STRIPE_API_KEY
+              value: __STRIPE_API_KEY__
+          image: eshopContainerRegistryXYZ.azurecr.io/eshop-aks/payment-service:20250423144435
+          name: payment-service
           resources:
             requests:
               memory: "64Mi"
