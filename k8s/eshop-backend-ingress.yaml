@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: eshop-backend-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: '/$1' # Nginx ingress controller should retain the data after the prefix (i.e. robert-reyes-dev.xyz/product-service/products will route to product-service/products in the cluster)
+    nginx.ingress.kubernetes.io/rewrite-target: "/$1" # Nginx ingress controller should retain the data after the prefix (i.e. robert-reyes-dev.xyz/product-service/products will route to product-service/products in the cluster)
 spec:
   ingressClassName: nginx
   rules:
@@ -31,6 +31,13 @@ spec:
                 name: eshop-payments
                 port:
                   number: 9093
+          - path: /homeos-service/(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: homeos-service
+                port:
+                  number: 3000
     - host: splunk.robert-reyes-dev.xyz
       http:
         paths:
@@ -51,3 +58,23 @@ spec:
                 name: eshop-rabbitmq
                 port:
                   number: 15672
+    - host: keycloak.robert-reyes-dev.xyz
+      http:
+        paths:
+          - path: /(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: homeos-keycloak
+                port:
+                  number: 8081
+    - host: adminer.robert-reyes-dev.xyz
+      http:
+        paths:
+          - path: /(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: homeos-adminer
+                port:
+                  number: 8080
