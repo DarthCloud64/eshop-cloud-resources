@@ -7,17 +7,20 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: robert-reyes-dev.xyz
+    - host: eshop.robert-reyes-dev.xyz
       http:
         paths:
-          - path: /eshop-ui/
+          - path: /
             pathType: Prefix
             backend:
               service:
                 name: eshop-ui
                 port:
                   number: 80
-          - path: /homeos-ui/
+    - host: homeos.robert-reyes-dev.xyz
+      http:
+        paths:
+          - path: /
             pathType: Prefix
             backend:
               service:

@@ -68,13 +68,3 @@ spec:
                 name: homeos-keycloak
                 port:
                   number: 8081
-    - host: adminer.robert-reyes-dev.xyz
-      http:
-        paths:
-          - path: /(.*)
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: homeos-adminer
-                port:
-                  number: 8080
