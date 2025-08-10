@@ -6,6 +6,11 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: "/$1" # Nginx ingress controller should retain the data after the prefix (i.e. robert-reyes-dev.xyz/product-service/products will route to product-service/products in the cluster)
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - robert-reyes-dev.xyz
+        - keycloak.robert-reyes-dev.xyz
+      secretName: tls-homeos-bundle
   rules:
     - host: robert-reyes-dev.xyz
       http:

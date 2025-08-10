@@ -6,6 +6,10 @@ metadata:
     nginx.ingress.kubernetes.io/error-page: 404 = /index.html # Fallback to index.html on 404 http errors. This allows React routing to function via the ingress controller
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - homeos.robert-reyes-dev.xyz
+      secretName: tls-homeos-bundle
   rules:
     - host: eshop.robert-reyes-dev.xyz
       http:
